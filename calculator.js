@@ -5,7 +5,7 @@
  * @variable PRIVATE { Number } `total`
  * @return {object} `calculator` object that can be used
  **/
-var calculatorModule = (function() {
+var calculatorModule = function() {
   var memory = 0;
   var total = 0;
 
@@ -15,11 +15,8 @@ var calculatorModule = (function() {
    * @return { Number }    current total
    */
    function _load (val) {
-    if (check(val)) {
       total = val;
       return total;
-    }
-    return 'not a number';
    }
 
   /**
@@ -35,10 +32,7 @@ var calculatorModule = (function() {
    * @param { Number } x
    */
    function _add(val) {
-    if (check(val)) {
       total += val;
-    }
-    return 'not a number';
    }
 
   /**
@@ -46,10 +40,7 @@ var calculatorModule = (function() {
    * @param  { Number } x
    */
    function _subtract(val) {
-    if (check(val)) {
       total -= val;
-    }
-    return 'not a number';
    }
 
   /**
@@ -57,10 +48,7 @@ var calculatorModule = (function() {
    * @param  { Number } x
    */
    function _multiply(val) {
-    if (check(val)) {
       total *= val;
-    }
-    return 'not a number';
    }
 
   /**
@@ -68,10 +56,7 @@ var calculatorModule = (function() {
    * @param  { Number } x
    */
    function _divide(val) {
-    if (check(val)) {
       total = total / val;
-    }
-    return 'not a number';
    }
 
   /**
@@ -99,22 +84,22 @@ var calculatorModule = (function() {
   /**
    * Validation
    */
-  function check(val) {
+  function check(val, method) {
     if (typeof val === 'number')
-      return true;
+      return method(val);
     else
-      return false;
+      return 'not a number';
    }
 
    return {
-    load : _load,
+    load : function (val) { return check(val, _load); },
     getTotal : _getTotal,
-    add : _add,
-    subtract : _subtract,
-    multiply : _multiply,
-    divide : _divide,
+    add : function (val) { return check(val, _add); },
+    subtract : function (val) {return check(val, _subtract); },
+    multiply : function (val) {return check(val, _multiply); },
+    divide : function (val) {return check(val, _divide); },
     recallMemory : _memory,
     saveMemory : _save,
     clearMemory : _clear
    };
-});
+};
